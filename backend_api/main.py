@@ -5,6 +5,7 @@
 
 
 from fastapi import FastAPI
+from fastapi import HTTPException
 from backend_api.schemas import CaseCreate, CaseRead
 from backend_api.models import Case
 
@@ -39,6 +40,11 @@ def create_case(case: CaseCreate):
 # Endpoint för att hämta alla ärenden
 # Returnerar alla ärenden
 # FastAPI serialiserar objekten till JSON
-@app.get("/cases/", response_model=list[CaseRead])
-def get_cases():
-    return [CaseRead.model_validate(case) for case in cases]
+@app.get("/cases/{case_id}", response_model=list[CaseRead])
+def get_cases(case_id: int):
+    for case in cases:
+        if case.id == case_id:
+            return CaseRead.model_validate(case)
+        
+    raise HTTPException(status_code=404, detail="Case not found")
+
