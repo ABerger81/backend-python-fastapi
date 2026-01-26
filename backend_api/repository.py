@@ -3,6 +3,7 @@
 # Just nu används en enkel lista som "databas"
 # Senare: databas (utan att API:t ändras)
 
+from unittest import case
 from backend_api.models import Case
 
 
@@ -10,16 +11,17 @@ class CaseRepository:
     def __init__(self):
         self._cases: list[Case] = []
         self._current_id = 1
-    
-    def create(self, title: str, description: str, status: str) -> Case: case = Case(
-                id=self._current_id,
-                title=title,
-                description=description,
-                status=status
-    )
-    self._cases.append(case)
-    self._current_id += 1
-    return case
+
+    def create(self, title: str, description: str, status: str) -> Case:
+        case = Case(
+            id=self._current_id,
+            title=title,
+            description=description,
+            status=status
+        )
+        self._cases.append(case)
+        self._current_id += 1
+        return case
 
     def get_all(self) -> list[Case]:
         return self._cases
