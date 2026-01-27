@@ -48,3 +48,18 @@ def get_case(case_id: int):
     
     return CaseRead.model_validate(case)
 
+# Endpoint för att uppdatera ett ärende med specifikt id
+@app.put("/cases/{case_id}", response_model=CaseRead)
+def update_case(case_id: int, case: CaseCreate):
+    updated_case = repo.update(
+        case_id=case_id,
+        title=case.title,
+        description=case.description,
+        status=case.status
+    )
+
+    if updated_case is None:
+        raise HTTPException(status_code=404, detail="Case not found")
+    
+    return CaseRead.model_validate(updated_case)
+
