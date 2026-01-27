@@ -7,12 +7,18 @@
 
 
 from pydantic import BaseModel, ConfigDict
+# Om du vill använda Enum-typer i scheman
+from enum import Enum
+
+class CaseStatus(str, Enum):
+    open = "open"
+    closed = "closed"
 
 # Används när klienten skickar POST (inget id ännu)
 class CaseCreate(BaseModel):        
     title: str
     description: str
-    status: str
+    status: CaseStatus = CaseStatus.open # defaultvärde, klienten kan utelämna status
 
 # Används när API:t svarar (id finns)
 class CaseRead(BaseModel):
