@@ -63,3 +63,13 @@ def update_case(case_id: int, case: CaseCreate):
     
     return CaseRead.model_validate(updated_case)
 
+# Endpoint för att radera ett ärende med specifikt id
+# Använder statuskod 204 No Content vid lyckad radering
+@app.delete("/cases/{case_id}", status_code=204)
+def delete_case(case_id: int):
+    deleted = repo.delete(case_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Case not found")
+
+
+

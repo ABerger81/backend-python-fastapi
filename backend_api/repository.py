@@ -6,6 +6,13 @@
 from unittest import case
 from backend_api.models import Case
 
+""" 
+Vad jag lär mig här är att skapa en dedikerad repository-klass för att hantera lagring och hämtning av Case-objekt. Detta abstraherar bort datalagringslogiken från resten av applikationen, vilket gör det enklare att byta ut lagringsmekanismen i framtiden (t.ex. byta från en lista till en riktig databas) utan att påverka API:t eller domänmodellen. Repository-mönstret hjälper också till att hålla koden organiserad och underlättar enhetstestning genom att isolera datalagringslogiken.
+Här tränas:
+- objektmutation (uppdatera attribut på ett objekt)
+- tydlig retur ('None' om ej hittad)
+- framtida DB-tänk
+"""
 
 class CaseRepository:
     def __init__(self):
@@ -32,10 +39,6 @@ class CaseRepository:
                 return case
         return None
     
-    """ 
-Vad jag lär mig här är att skapa en dedikerad repository-klass för att hantera lagring och hämtning av Case-objekt. Detta abstraherar bort datalagringslogiken från resten av applikationen, vilket gör det enklare att byta ut lagringsmekanismen i framtiden (t.ex. byta från en lista till en riktig databas) utan att påverka API:t eller domänmodellen. Repository-mönstret hjälper också till att hålla koden organiserad och underlättar enhetstestning genom att isolera datalagringslogiken.
- """
-    
     def update(self, case_id: int, title: str, description: str, status: str) -> Case | None:
         case = self.get_by_id(case_id)
         if case is None:
@@ -45,10 +48,12 @@ Vad jag lär mig här är att skapa en dedikerad repository-klass för att hante
         case.description = description
         case.status = status
         return case
-
-"""
-Här tränas:
-- objektmutation (uppdatera attribut på ett objekt)
-- tydlig retur (´None´ om ej hittad)
-- framtida DB-tänk
-"""
+    
+    def delete(self, case_id: int) -> bool:
+        case = self.get_by_id(case_id)
+        if case is None:
+            return False
+        
+        self._cases.remove(case)
+        return True
+    
