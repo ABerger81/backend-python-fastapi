@@ -3,7 +3,6 @@
 # Just nu används en enkel lista som "databas"
 # Senare: databas (utan att API:t ändras)
 
-from unittest import case
 from backend_api.models import Case
 
 """ 
