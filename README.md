@@ -27,7 +27,7 @@ A case has the following fields:
 - id (int)
 - title (str)
 - description (str)
-- status (str, e.g. "öppen", "stängd")
+- status (str, e.g. "open", "closed")
 
 ## Tech stack
 - Python 3
