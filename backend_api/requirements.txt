@@ -1,3 +1,14 @@
+# requirements.txt (runtime)
 fastapi
 uvicorn
 pydantic
+
+# requirements_dev.txt (development)
+pytest
+httpx
+
+# Installation instructions
+# To install runtime dependencies:
+# pip install -r backend_api/requirements.txt
+# To install development dependencies:
+# pip install -r backend_api/requirements_dev.txt
