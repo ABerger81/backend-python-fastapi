@@ -26,21 +26,25 @@ class CaseRepository:
     def get_by_id(self, case_id: int) -> Optional[Case]:
         return next((c for c in self._cases if c.id == case_id), None)
     
-    def create(self, case: Case) -> Case:
-        case.id = self._next_id
-        self._next_id +=1
-
+    def create(self, title: str, description: str, status: str) ->Case: 
+        case = Case(
+            id=self._next_id,
+            title=title,
+            description=description,
+            status=status
+            )
+        self._next_id += 1
         self._cases.append(case)
         return case
     
-    def update(self, case_id: int, updated_case) -> Optional[Case]:
+    def update(self, case_id: int, title: str, description: str, status: str) -> Optional[Case]:
         case = self.get_by_id(case_id)
         if case is None:
             return None
         
-        case.title = updated_case.title
-        case.description = updated_case.description
-        case.status = updated_case.status
+        case.title = title
+        case.description = description
+        case.status = status
         return case
 
     def delete(self, case_id: int) -> bool:
