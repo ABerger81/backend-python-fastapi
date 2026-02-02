@@ -1,22 +1,39 @@
-# Test cases for backend_api main.py, not the repository
+# test_cases_api.py
+# # Test cases for backend_api main.py, not the repository
 # directly
 # Using FastAPI's TestClient to simulate API requests
 # Integration-test ´light´
 # Run the tests with:
-# bash: pytest
-# You should see:
-# 6 passed in X.XXs
-from binascii import Error
-from enum import Enum
-from sys import implementation
-from fastapi import Request
-from fastapi.testclient import TestClient
-from backend_api.main import app
+# ```bash pytest -> 6 passed in X.XXs
 
-client = TestClient(app)
+from fastapi.testclient import TestClient
+import pytest
+
+
+from backend_api.main import app, get_case_repository
+from backend_api.repository import CaseRepository
+
+@pytest.fixture
+def test_repo():
+    # Create a fresh repository for each test
+    return CaseRepository()
+
+@pytest.fixture
+def client(test_repo):
+    # Override the dependency to use the test repository
+    def override_get_case_repository():
+        return test_repo
+    
+    app.dependency_overrides[get_case_repository] = override_get_case_repository
+
+    with TestClient(app) as client:
+        yield client
+
+    app.dependency_overrides.clear()
 
 # Test 1 - POST /cases/
-def test_create_case():
+def test_create_case(client):
+    # Arrange & Act
     response = client.post(
         "/cases/",
         json={
@@ -27,7 +44,6 @@ def test_create_case():
     )
 
     assert response.status_code == 201
-
     data = response.json()
     assert data["id"] == 1
     assert data["title"] == "Test case"
@@ -40,10 +56,18 @@ def test_create_case():
     # ID is created correctly
 
 # Test 2 - GET /cases/
-def test_get_all_cases():
+def test_get_all_cases(client):
+    # Arrange - create a case first
+    client.post(
+        "/cases/",
+        json={
+            "title": "Test case",
+            "description": "Testing GET all",
+            "status": "open"
+        }
+    )
     response = client.get("/cases/")
     assert response.status_code == 200
-
     # Get JSON data
     data = response.json()
     # Response is a list
@@ -55,10 +79,18 @@ def test_get_all_cases():
     # We test behavior, not implementation
 
 # Test 3 - GET /cases/
-def test_get_case_by_id():
+def test_get_case_by_id(client):
+    # Arrange - create a case first
+    client.post(
+        "/cases/",
+        json={
+            "title": "Another case",
+            "description": "Testing GET by id",
+            "status": "open"
+        }
+    )
     response = client.get("/cases/1")
     assert response.status_code == 200
-
     data = response.json()
     assert data["id"] == 1
 
@@ -72,7 +104,16 @@ def test_get_case_by_id():
     # End-to-end test
 
 # Test 4 - GET non existing id -> 404
-def test_non_existing_case():
+def test_non_existing_case(client):
+    # Arrange - create no case
+    client.post(
+        "/cases/",
+        json={
+            "title": "Another case",
+            "description": "Testing GET non-existing id",
+            "status": "open"
+        }
+    )
     response = client.get("/cases/9999")
     assert response.status_code == 404
 
@@ -81,7 +122,16 @@ def test_non_existing_case():
     # The API follows REST convention
 
 # Test 5 - PUT /cases/{id}
-def test_update_case():
+def test_update_case(client):
+    # Arrange - update existing case
+    client.post(
+        "/cases/",
+        json={
+            "title": "Case to update",
+            "description": "Testing PUT",
+            "status": "open"
+        }
+    )
     response = client.put(
         "/cases/1",
         json={
@@ -103,7 +153,16 @@ def test_update_case():
     # End-to-end test
 
 # Test 6 - DELETE /cases/{id}
-def test_delete_case():
+def test_delete_case(client):
+    # Arrange - delete excisting case
+    client.post(
+        "/cases/",
+        json={
+            "title": "Case to delete",
+            "description": "Testing DELETE",
+            "status": "open"
+        }
+    )
     response = client.delete("/cases/1")
     assert response.status_code == 204
 
