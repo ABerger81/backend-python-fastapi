@@ -55,3 +55,20 @@ uvicorn backend_api.main:app --reload
 The API is running on:
 - http://127.0.0.1:8000
 - Swagger UI: http://127.0.0.1:8000/docs
+
+## Testing
+
+API tests are written using `pytest` and FastAPI's `TestClient`.
+
+Run tests locally:
+
+```bash
+pytest
+
+Tests cover:
+- Create case
+- List cases
+- Get case by id
+- Update case
+- Delete case
+- 404 handling
