@@ -1,47 +1,58 @@
 # Backend API - Case Management (FastAPI)
 
-A simple backend API built with **FastAPI** to handle issues (cases).
-The project is part of my training in backend and fullstack development.
+A backend API built with **FastAPI** demonstrating clean architecture,
+dependency injection, and automated testing.
 
-## Important!
-- Uses in-memory storage (no database yet)
+This project is developed as part of my training in backend development,
+with a focus on structure, testability, and maintainability.
+
+---
+
+## Project scope (current)
+
+- Backend-only application
+- In-memory data storage (no database yet)
+- Fully tested API endpoints
+
+---
 
 ## Functionality
 
-The API supports basic CRUD operations for cases:
+The API provides basic CRUD operations for managing cases:
 
 - Create case
-- Get all cases
-- Get a specific case by ID
-- Update case
-- Delete case
+- Retreive all cases
+- Retrieve a specific case by ID
+- Update a case
+- Delete a case
 
 Each case contains:
-- id
-- title
-- description
-- status (`open` / `closed`)
+- `id`
+- `title`
+- `description`
+- `status` (`open` / `closed`)
 
-## Case model
-A case has the following fields:
-- id (int)
-- title (str)
-- description (str)
-- status (str, e.g. "open", "closed")
-
-## Tech stack
-- Python 3
-- FastAPI
-- Pydantic v2
-- Uvicorn
+---
 
 ## Architecture overview
-- 
 
-## Service layer responsibilities
--
+The application follows a layered architechture:
 
-## Run locally
+- **API layer**
+    FastAPI endpoints and request/response validation
+
+- **Service layer**
+    Business logic and domain rules
+
+- **Repository layer**
+    Data access abstraction (currently in-memory storage)
+
+This separation allows the storage mechanism to be replaced (e.g. with a database)
+without changing the API or business logic.
+
+---
+
+## Running the application locally
 
 1. Clone the repository
 ```bash
@@ -49,32 +60,48 @@ git clone <repo-url>
 cd backend-api
 
 2. Create and activate virtual environment
+```bash
 python -m venv .venv
-source .venv/bin/activate # Windows: .venv\Scripts\activate
+# Windows
+.venv\Scripts\activate
+# macOS / Linux
+source .venv/bin/activate
 
 3. Install dependencies
+```bash
 pip install -r requirements.txt
 
-4. Start the server
+4. Start the development server
+```bash
 uvicorn backend_api.main:app --reload
 
-The API is running on:
+The API will be available at:
 - http://127.0.0.1:8000
 - Swagger UI: http://127.0.0.1:8000/docs
 
+---
+
 ## Testing
+Automated tests are written using pytest and FastAPI's 
 
 API tests are written using `pytest` and FastAPI's `TestClient`.
 
-Run tests locally:
+To run the test suite:
 
 ```bash
 pytest
 
-Tests cover:
-- Create case
-- List cases
-- Get case by id
-- Update case
-- Delete case
-- 404 handling
+Tests include:
+- API integration tests
+- Repository unit tests
+- Service layer unit tests
+
+---
+
+## Future direction
+This project is intended to evolve into a fullstack application.
+Planned improvements include:
+- Persistent database storage
+- Authentication and authorization
+- Frontend client
+- CI/CD pipeline
