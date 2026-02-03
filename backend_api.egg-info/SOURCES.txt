@@ -1,6 +1,7 @@
 README.md
 pyproject.toml
 backend_api/__init__.py
+backend_api/dependencies.py
 backend_api/main.py
 backend_api/models.py
 backend_api/repository.py
@@ -14,3 +15,4 @@ backend_api/services/case_service.py
 backend_api/tests/__init__.py
 backend_api/tests/integration/test_cases_api.py
 backend_api/tests/unit/test_case_repository.py
+backend_api/tests/unit/test_case_service.py
