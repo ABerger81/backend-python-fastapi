@@ -1,7 +1,7 @@
 # Backend API - Case Management (FastAPI)
 
 A simple backend API built with **FastAPI** to handle issues (cases).
-The project is part of my training in backen and fullstack development.
+The project is part of my training in backend and fullstack development.
 
 ## Important!
 - Uses in-memory storage (no database yet)
@@ -34,6 +34,12 @@ A case has the following fields:
 - FastAPI
 - Pydantic v2
 - Uvicorn
+
+## Architecture overview
+- 
+
+## Service layer responsibilities
+-
 
 ## Run locally
 
