@@ -58,6 +58,7 @@ without changing the API or business logic.
 ```bash
 git clone <repo-url>
 cd backend-api
+```
 
 2. Create and activate virtual environment
 ```bash
@@ -66,14 +67,17 @@ python -m venv .venv
 .venv\Scripts\activate
 # macOS / Linux
 source .venv/bin/activate
+```
 
 3. Install dependencies
 ```bash
 pip install -r requirements.txt
+```
 
 4. Start the development server
 ```bash
 uvicorn backend_api.main:app --reload
+```
 
 The API will be available at:
 - http://127.0.0.1:8000
