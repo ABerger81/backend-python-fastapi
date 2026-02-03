@@ -14,7 +14,7 @@ from backend_api.schemas import CaseCreate, CaseRead
 from backend_api.services.case_service import CaseService
 from backend_api.dependencies import get_case_service
 
-app = FastAPI()     # Skapa FastAPI-app
+app = FastAPI()
 
 
 @app.post("/cases/", response_model=CaseRead,  status_code=201) 
