@@ -1,18 +1,14 @@
 # repository.py
-# Ansvar: Hantera lagring och logik av Case-objekt
-# Just nu används en enkel Lista som "databas"
-# Senare: databas (utan att API:t ändras)
+"""
+Responsibilities:
+- Handle storage and retrieval of Case objects
+- Abstract persistence from business logic
+- Enable future database replacement without API changes
+"""
 
 from typing import List, Optional
 from backend_api.models import Case
 
-""" 
-Vad jag lär mig här är att skapa en dedikerad repository-klass för att hantera lagring och hämtning av Case-objekt. Detta abstraherar bort datalagringslogiken från resten av applikationen, vilket gör det enklare att byta ut lagringsmekanismen i framtiden (t.ex. byta från en Lista till en riktig databas) utan att påverka API:t eller domänmodellen. Repository-mönstret hjälper också till att hålla koden organiserad och underlättar enhetstestning genom att isolera datalagringslogiken.
-Här tränas:
-- objektmutation (uppdatera attribut på ett objekt)
-- tydlig retur ('None' om ej hittad)
-- framtida DB-tänk
-"""
 
 class CaseRepository:
     def __init__(self):
@@ -20,7 +16,7 @@ class CaseRepository:
         self._cases: List[Case] = []
         self._next_id: int = 1
 
-    def create(self, title: str, description: str, status: str) ->Case: 
+    def create(self, title: str, description: str, status: str) -> Case: 
         # Create a new Case and store it
         case = Case(
             id=self._next_id,
