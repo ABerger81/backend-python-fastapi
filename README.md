@@ -94,6 +94,7 @@ To run the test suite:
 
 ```bash
 pytest
+```
 
 Tests include:
 - API integration tests
