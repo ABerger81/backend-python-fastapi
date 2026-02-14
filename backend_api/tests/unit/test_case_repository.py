@@ -1,12 +1,12 @@
-# test_case_repository.py
+# backend.api/tests/unit/test_case_repository.py
 # Unit tests for CaseRepository class
 
 
-from backend_api.repository import CaseRepository
+from backend_api.repositories.inmemory import InMemoryCaseRepository
 
 # Test 1 - create() creates case and sets ID
 def test_create_case_assigns_id_and_stores_case():
-    repo = CaseRepository()
+    repo = InMemoryCaseRepository()
 
     case = repo.create(
         title="Test",
@@ -26,7 +26,7 @@ def test_create_case_assigns_id_and_stores_case():
 
 # Test 2 - multiple create()'s give incremental ID's
 def test_create_multiple_cases_increment_id():
-    repo = CaseRepository()
+    repo = InMemoryCaseRepository()
 
     case1 = repo.create("A", "A-desc", "open")
     case2 = repo.create("B", "B-desc", "closed")
@@ -40,7 +40,7 @@ def test_create_multiple_cases_increment_id():
 
 # Test 3 - get_all() returns empty list initially
 def test_get_all_returns_empty_list_initially():
-    repo = CaseRepository()
+    repo = InMemoryCaseRepository()
 
     cases = repo.get_all()
 
@@ -52,7 +52,7 @@ def test_get_all_returns_empty_list_initially():
 
 # Test 4 - get_by_id() finds the correct case
 def test_get_by_id_returns_correct_case():
-    repo = CaseRepository()
+    repo = InMemoryCaseRepository()
     created = repo.create("Test", "Desc", "open")
 
     found = repo.get_by_id(created.id)
@@ -67,7 +67,7 @@ def test_get_by_id_returns_correct_case():
 
 # Test 5 - get_by_id() on unknown ID
 def test_get_by_id_returns_none_for_unknown_id():
-    repo = CaseRepository()
+    repo = InMemoryCaseRepository()
 
     result = repo.get_by_id(999)
 
@@ -79,7 +79,7 @@ def test_get_by_id_returns_none_for_unknown_id():
 
 # Test 6 - update() modifies existing case
 def test_update_case_mutates_existing_case():
-    repo = CaseRepository()
+    repo = InMemoryCaseRepository()
     case = repo.create("Old title", "Old desc", "open")
 
     updated = repo.update(
@@ -99,7 +99,7 @@ def test_update_case_mutates_existing_case():
 
 # Test 7 - update() on unknown ID
 def test_update_case_returns_none_for_unknown_id():
-    repo = CaseRepository()
+    repo = InMemoryCaseRepository()
 
     result = repo.update(
         case_id=123,
@@ -116,7 +116,7 @@ def test_update_case_returns_none_for_unknown_id():
 
 # Test 8 - delete() removes existing case
 def test_delete_removes_case():
-    repo = CaseRepository()
+    repo = InMemoryCaseRepository()
     case = repo.create("Test", "Desc", "open")
 
     deleted = repo.delete(case.id)
