@@ -1,16 +1,45 @@
 # repository.py
 """
 Responsibilities:
-- Handle storage and retrieval of Case objects
-- Abstract persistence from business logic
-- Enable future database replacement without API changes
+- Define the persistence contract for Case objects
+- Contain NO storage logic
+- Allow multiple implementations (in-memory, database, etc.)
 """
 
+from abc import ABC, abstractmethod
 from typing import List, Optional
 from backend_api.models import Case
 
 
-class CaseRepository:
+class CaseRepository(ABC):
+    """Abstract base class for Case persistance."""
+
+    @abstractmethod
+    def create(self, title: str, description: str, status: str) -> Case:
+        pass
+
+    @abstractmethod
+    def get_all(self) -> List[Case]:
+        pass
+
+    @abstractmethod
+    def get_by_id(self, case_id: int) -> Optional[Case]:
+        pass
+
+    @abstractmethod
+    def update(
+        self,
+        case_id: int,
+        title: str,
+        description: str,
+        status: str,
+    ) -> Optional[Case]:
+        pass
+
+    @abstractmethod
+    def delete(self, case_id: int) -> bool:
+        pass
+
     def __init__(self):
         # Internal storage of cases
         self._cases: List[Case] = []
