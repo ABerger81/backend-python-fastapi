@@ -8,7 +8,7 @@ Responsibilities:
 - Remain free of HTTP concerns
 """
 
-from backend_api.repository import CaseRepository
+from backend_api.repository_contract import CaseRepository
 
 class CaseService:
     def __init__(self, repository: CaseRepository):

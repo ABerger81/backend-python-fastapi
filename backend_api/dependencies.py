@@ -8,7 +8,7 @@ _Chooses concrete implementations
 """
 
 import sqlite3
-from backend_api.repository import CaseRepository
+from backend_api.repository_contract import CaseRepository
 from backend_api.repositories.sqlite import SQLiteCaseRepository
 from backend_api.services.case_service import CaseService
 

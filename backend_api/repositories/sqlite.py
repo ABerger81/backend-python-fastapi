@@ -11,7 +11,7 @@ Responsibilities:
 import sqlite3
 from typing import List, Optional
 from backend_api.models import Case
-from backend_api.repository import CaseRepository
+from backend_api.repository_contract import CaseRepository
 
 
 class SQLiteCaseRepository(CaseRepository):
