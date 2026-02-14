@@ -1,33 +1,41 @@
 # backend_api\schemas.py
 """
-Pydantic-schema (validering och API)
-Syfte: Säkerställa att data från användaren är korrekt
-innan dn når logiken (models.py) i systemet.
-FastAPI använder dessa scheman för att validera
-inkommande och utgående data.
+Pydantic schemas for API validation.
+
+Purpose:
+- Ensure incoming client data is valid
+- Prevent invalid data from reaching the domain layer (models.py)
+- Used by FastAPI for request and response validation
 """
 
-from pydantic import BaseModel, ConfigDict
-# Om du vill använda Enum-typer i scheman
+from pydantic import BaseModel, ConfigDict, field_validator
+# If you want to use Enum types in schemas
 from enum import Enum
 
 class CaseStatus(str, Enum):
     open = "open"
     closed = "closed"
 
-# Används när klienten skickar POST (inget id ännu)
+# Used when the client sends POST (no id yet)
 class CaseCreate(BaseModel):        
     title: str
     description: str
-    status: CaseStatus = CaseStatus.open # defaultvärde, klienten kan utelämna status
+    status: CaseStatus = CaseStatus.open # default value, client can omit status
 
-# Används när API:t svarar (id finns)
+    @field_validator("title")
+    @classmethod
+    def title_must_not_be_empty(cls, v):
+        if not v.strip():
+            raise ValueError("Title cannot be empty")
+        return v
+
+# Used when the API responds (id exists) 
 class CaseRead(BaseModel):
     id: int
     title: str
     description: str
     status: CaseStatus
 
-    # Det är okej att läsa värden från `objekt.attribut`
-    # inte bara från dict
+    # It's okay to read values ​​from `object.attribute`
+    # not just from dict
     model_config = ConfigDict(from_attributes=True)
