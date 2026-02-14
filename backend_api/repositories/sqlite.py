@@ -17,7 +17,17 @@ from backend_api.repository_contract import CaseRepository
 class SQLiteCaseRepository(CaseRepository):
     def __init__(self, connection: sqlite3.Connection):
         self._conn = connection
+        self._conn.row_factory = sqlite3.Row
         self._ensure_schema()
+    
+    def _row_to_case(self, row: sqlite3.Row) -> Case:
+        return Case(
+            id=row["id"],
+            title=row["title"],
+            description=row["description"],
+            status=row["status"],
+        )
+
 
     def _ensure_schema(self) -> None:
         """Create database schema if it does not exist."""
@@ -52,10 +62,7 @@ class SQLiteCaseRepository(CaseRepository):
             "SELECT id, title, description, status FROM cases"
         ).fetchall()
 
-        return [
-            Case(id=row[0], title=row[1], description=row[2], status=row[3])
-            for row in rows
-        ]
+        return [self._row_to_case(row) for row in rows]
     
     def get_by_id(self, case_id: int) -> Optional[Case]:
         row = self._conn.execute(
@@ -63,10 +70,7 @@ class SQLiteCaseRepository(CaseRepository):
             (case_id,),
         ).fetchone()
 
-        if row is None:
-            return None
-        
-        return Case(id=row[0], title=row[1], description=row[2], status=row[3])
+        return self._row_to_case(row) if row else None
     
     def update(
             self,

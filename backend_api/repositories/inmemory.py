@@ -31,6 +31,11 @@ class InMemoryCaseRepository(CaseRepository):
         return case
 
     def get_all(self) -> List[Case]:
+        """
+        Return all cases.
+        
+        Note: returns live Case objects (mutable references).
+        """
         return list(self._cases)
     
     def get_by_id(self, case_id: int) -> Optional[Case]:
