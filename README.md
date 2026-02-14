@@ -117,6 +117,12 @@ Tests include:
 
 ---
 
+## Error handling strategy
+
+- Business rule violations raise domain errors in the service layer
+- API layer translates domain errors to HTTP responses
+- Persistence layer remains free of HTTP and validation logic
+
 ## Future direction
 This project is intended to evolve into a fullstack application.
 Planned architectural improvements include:
