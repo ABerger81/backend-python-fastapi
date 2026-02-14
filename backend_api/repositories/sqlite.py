@@ -59,7 +59,7 @@ class SQLiteCaseRepository(CaseRepository):
     
     def get_by_id(self, case_id: int) -> Optional[Case]:
         row = self._conn.execute(
-            "SELECT id, title, descriptio, status FROM cases WHERE id = ?",
+            "SELECT id, title, description, status FROM cases WHERE id = ?",
             (case_id,),
         ).fetchone()
 
@@ -90,7 +90,7 @@ class SQLiteCaseRepository(CaseRepository):
         
         return self.get_by_id(case_id)
     
-    def delet(self, case_id: int) -> bool:
+    def delete(self, case_id: int) -> bool:
         cursor = self._conn.execute(
             "DELETE FROM cases WHERE id = ?",
             (case_id,),
