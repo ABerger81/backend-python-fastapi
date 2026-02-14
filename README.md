@@ -11,7 +11,9 @@ with a focus on structure, testability, and maintainability.
 ## Project scope (current)
 
 - Backend-only application
-- In-memory data storage (no database yet)
+- Repository abstraction with multiple implementations
+- In-memory repository for unit tests
+- SQLite-backed repository for integration testing and development
 - Fully tested API endpoints
 
 ---
@@ -49,6 +51,18 @@ The application follows a layered architechture:
 
 This separation allows the storage mechanism to be replaced (e.g. with a database)
 without changing the API or business logic.
+
+### Repository implementations
+
+The repository layer is defined as an abstract contract and has multiple implementations:
+
+- **InMemoryCaseRepository**
+    Used for unit tests and fast, isolated execution.
+
+- ** SQLiteCaseRepository**
+    Used for integration tests and local development, providing real persistence.
+
+This allows switching storage mechanisms without modifying business logic or API code.
 
 ---
 
@@ -105,8 +119,10 @@ Tests include:
 
 ## Future direction
 This project is intended to evolve into a fullstack application.
-Planned improvements include:
-- Persistent database storage
+Planned architectural improvements include:
+- Introducing a repository contract to support multiple storage implementations
+- Adding persistent storage (SQLite -> ORM later)
+- Strengthening integration tests with real infrastructure
 - Authentication and authorization
 - Frontend client
 - CI/CD pipeline
