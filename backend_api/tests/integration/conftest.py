@@ -1,4 +1,4 @@
-# backend.api/tests/integration/conftest.py
+# backend_api\tests\integration\conftest.py
 
 import sqlite3
 import pytest
