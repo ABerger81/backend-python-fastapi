@@ -1,31 +1,13 @@
 # backend_api\tests\integration\test_cases_api.py
 """
-Integration test cases for backend_api main.py, not the
-repository directly.
-Using FastAPI's TestClient to simulate API requests
-Integration test = setup -> request -> assert
-Run the tests with:
-```bash pytest -> 6 passed in X.XXs
+Integration tests for backend_api.main.
+
+These tests verify the full request -> validation -> service -> repository -> response flow using FastAPI's TestClient.
 """
 from fastapi.testclient import TestClient
 import pytest
 
-from backend_api.main import app, get_case_service
-from backend_api.services.case_service import CaseService
 
-
-@pytest.fixture
-def client(test_repo):
-    # Override the dependency to use the test repository
-    def override_get_case_service():
-        return CaseService(test_repo)
-    
-    app.dependency_overrides[get_case_service] = override_get_case_service
-
-    with TestClient(app) as client:
-        yield client
-
-    app.dependency_overrides.clear()
 
 # Test 1 - POST /cases/
 def test_create_case(client):

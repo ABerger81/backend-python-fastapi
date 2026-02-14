@@ -6,7 +6,6 @@ from fastapi.testclient import TestClient
 
 from backend_api.main import app
 from backend_api.dependencies import get_repository
-from backend_api.repositories.inmemory import InMemoryCaseRepository
 from backend_api.repositories.sqlite import SQLiteCaseRepository
 
 @pytest.fixture
