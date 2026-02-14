@@ -126,3 +126,9 @@ Planned architectural improvements include:
 - Authentication and authorization
 - Frontend client
 - CI/CD pipeline
+
+## Development notes
+
+- Build artifacts and test caches are excluded from version control
+- Tests use dependency injection to swap repository implementations
+- SQLite is used for integration tests via in-memory databases
