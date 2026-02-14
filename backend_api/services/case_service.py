@@ -35,8 +35,8 @@ class CaseService:
         if case is None:
             return None
         
-        if case.status.lower == "closed":
-            raise ValueError("Cannot update a closed case")
+        if case.status.lower() == "closed":
+            raise ValueError("Closed cases cannot be updated")
         
         if not title or not title.strip():
             raise ValueError("Case title cannot be empty")

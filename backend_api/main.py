@@ -22,11 +22,15 @@ def create_case(
     case_in: CaseCreate,
     service: CaseService = Depends(get_case_service)
 ):
-    case = service.create_case(
-        title=case_in.title,
-        description=case_in.description,
-        status=case_in.status.value
-    )
+    try:
+        case = service.create_case(
+            title=case_in.title,
+            description=case_in.description,
+            status=case_in.status.value
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    
     return CaseRead.model_validate(case)
 
 
@@ -55,12 +59,15 @@ def update_case(
     case_update: CaseCreate,
     service: CaseService = Depends(get_case_service)
 ):
-    case = service.update_case(
-        case_id,
-        title=case_update.title,
-        description=case_update.description,
-        status=case_update.status.value
-    )
+    try:
+        case = service.update_case(
+            case_id,
+            title=case_update.title,
+            description=case_update.description,
+            status=case_update.status.value
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
     if case is None:
         raise HTTPException(status_code=404, detail="Case not found")
@@ -73,6 +80,9 @@ def delete_case(
     case_id: int,
     service: CaseService = Depends(get_case_service)
 ):
-    deleted = service.delete_case(case_id)
+    try:
+        deleted = service.delete_case(case_id)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     if not deleted:
         raise HTTPException(status_code=404, detail="Case not found")
