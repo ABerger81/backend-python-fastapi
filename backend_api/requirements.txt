@@ -1,10 +1,13 @@
 # backend_api\requirements.txt
-# requirements.txt (runtime)
+txt
+
 fastapi
 uvicorn
 pydantic
 
-# requirements_dev.txt (development)
+# backend_api\requirements_dev.txt
+txt
+
 pytest
 httpx
 
