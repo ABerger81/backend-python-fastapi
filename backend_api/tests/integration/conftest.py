@@ -8,9 +8,9 @@ from backend_api.main import app
 from backend_api.dependencies import get_repository
 from backend_api.repositories.sqlite import SQLiteCaseRepository
 
-@pytest.pixture
+@pytest.fixture
 def client():
-    connection = sqlite3.connect(":memory")
+    connection = sqlite3.connect(":memory:")
     repository = SQLiteCaseRepository(connection)
 
     app.dependency_overrides[get_repository] = lambda: repository
