@@ -47,6 +47,8 @@ The application follows a layered architechture:
 - Business logic
 - Domain rules
 - Independent of HTTP and persistence concerns
+Note:
+Domain rules: Closed cases cannot be updated or deleted
 
 ### Repository layer
 - Abstract repository contract
