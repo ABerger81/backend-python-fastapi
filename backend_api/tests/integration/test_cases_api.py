@@ -14,7 +14,7 @@ def test_create_case(client):
     response = client.post(
         "/cases/",
         json={
-            "title": "Test case",
+            "title": "Test",
             "description": "Testing POST",
             "status": "open",
         },
@@ -35,7 +35,7 @@ def test_get_all_cases(client):
         "/cases/",
         json={
             "title": "Test",
-            "description": "Desc",
+            "description": "Testing GET all",
             "status": "open",
         },
     )
@@ -49,7 +49,7 @@ def test_get_case_by_id(client):
         "/cases/",
         json={
             "title": "Test",
-            "description": "Desc",
+            "description": "Testing GET by id",
             "status": "open",
         },
     )
@@ -66,7 +66,7 @@ def test_update_case(client):
         "/cases/",
         json={
             "title": "Test",
-            "description": "Desc",
+            "description": "Testing PUT",
             "status": "open",
         },
     )
@@ -75,7 +75,7 @@ def test_update_case(client):
         json={
             "title": "Updated",
             "description": "Updated",
-            "status": "closed",
+            "status": "open",
         },
     )
     assert response.status_code == 200
@@ -92,7 +92,7 @@ def test_delete_case(client):
         "/cases/",
         json={
             "title": "Test",
-            "description": "Desc",
+            "description": "Testing DELETE",
             "status": "open",
         },
     )

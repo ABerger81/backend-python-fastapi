@@ -8,35 +8,34 @@ Responsibilities:
 - Delegate business logic to services
 """
 
-from fastapi import FastAPI, HTTPException, Depends
-
+from fastapi import FastAPI, HTTPException, Depends, Response
+from backend_api.dependencies import get_case_service
 from backend_api.schemas import CaseCreate, CaseRead
 from backend_api.services.case_service import CaseService
-from backend_api.dependencies import get_case_service
 
 app = FastAPI()
 
 
-@app.post("/cases/", response_model=CaseRead,  status_code=201) 
+@app.post("/cases/", status_code=201, response_model=CaseRead)
 def create_case(
-    case_in: CaseCreate,
-    service: CaseService = Depends(get_case_service)
+    payload: CaseCreate,
+    service: CaseService = Depends(get_case_service),
 ):
     try:
         case = service.create_case(
-            title=case_in.title,
-            description=case_in.description,
-            status=case_in.status.value
+            title=payload.title,
+            description=payload.description,
+            status=payload.status.value,
         )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
-    
+
     return CaseRead.model_validate(case)
 
 
 @app.get("/cases/", response_model=list[CaseRead])
 def get_cases(
-    service: CaseService = Depends(get_case_service)
+    service: CaseService = Depends(get_case_service),
 ):
     cases = service.get_all_cases()
     return [CaseRead.model_validate(c) for c in cases]
@@ -45,7 +44,7 @@ def get_cases(
 @app.get("/cases/{case_id}", response_model=CaseRead)
 def get_case(
     case_id: int,
-    service: CaseService = Depends(get_case_service)
+    service: CaseService = Depends(get_case_service),
 ):
     case = service.get_case(case_id)
     if case is None:
@@ -56,33 +55,32 @@ def get_case(
 @app.put("/cases/{case_id}", response_model=CaseRead)
 def update_case(
     case_id: int,
-    case_update: CaseCreate,
-    service: CaseService = Depends(get_case_service)
+    payload: CaseCreate,
+    service: CaseService = Depends(get_case_service),
 ):
     try:
         case = service.update_case(
             case_id,
-            title=case_update.title,
-            description=case_update.description,
-            status=case_update.status.value
+            title=payload.title,
+            description=payload.description,
+            status=payload.status.value,
         )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
     if case is None:
         raise HTTPException(status_code=404, detail="Case not found")
-        
+
     return CaseRead.model_validate(case)
 
 
 @app.delete("/cases/{case_id}", status_code=204)
 def delete_case(
     case_id: int,
-    service: CaseService = Depends(get_case_service)
+    service: CaseService = Depends(get_case_service),
 ):
-    try:
-        deleted = service.delete_case(case_id)
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    deleted = service.delete_case(case_id)
     if not deleted:
         raise HTTPException(status_code=404, detail="Case not found")
+
+    return Response(status_code=204)

@@ -2,24 +2,38 @@
 """
 SQLite implementation of the CaseRepository.
 
-Responsibilities:
-- Persist cases using SQLite
-- Translate rows <-> domain models
-- Hide SQL details from the service layer
+Purpose: persistence logic only
 """
 
 import sqlite3
-from typing import List, Optional
+from typing import List, Optional, Callable, ContextManager
 from backend_api.models import Case
 from backend_api.repository_contract import CaseRepository
 
 
 class SQLiteCaseRepository(CaseRepository):
-    def __init__(self, connection: sqlite3.Connection):
-        self._conn = connection
-        self._conn.row_factory = sqlite3.Row
+    def __init__(
+        self,
+        connection_factory: Callable[[], ContextManager[sqlite3.Connection]],
+    ):
+        self._connection_factory = connection_factory
         self._ensure_schema()
-    
+
+    def _ensure_schema(self) -> None:
+        # Schema creation must also use a local connection
+        with self._connection_factory() as conn:
+            conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS cases (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    title TEXT NOT NULL,
+                    description TEXT NOT NULL,
+                    status TEXT NOT NULL
+                )
+                """
+            )
+            conn.commit()
+
     def _row_to_case(self, row: sqlite3.Row) -> Case:
         return Case(
             id=row["id"],
@@ -28,76 +42,71 @@ class SQLiteCaseRepository(CaseRepository):
             status=row["status"],
         )
 
-
-    def _ensure_schema(self) -> None:
-        """Create database schema if it does not exist."""
-        self._conn.execute(
-            """
-            CREATE TABLE IF NOT EXISTS cases (
-                id INTEGER PRIMARY KEY,
-                title TEXT NOT NULL,
-                description TEXT NOT NULL,
-                status TEXT NOT NULL
-            )
-            """
-        )
-        self._conn.commit()
-    
     def create(self, title: str, description: str, status: str) -> Case:
-        cursor = self._conn.execute(
-            "INSERT INTO cases (title, description, status) VALUES (?, ?, ?)",
-            (title, description, status),
-        )
-        self._conn.commit()
+        with self._connection_factory() as conn:
+            cursor = conn.execute(
+                "INSERT INTO cases (title, description, status) VALUES (?, ?, ?)",
+                (title, description, status),
+            )
+            conn.commit()
 
-        return Case(
-            id=cursor.lastrowid,
-            title=title,
-            description=description,
-            status=status,
-        )
-    
+            return Case(
+                id=cursor.lastrowid,
+                title=title,
+                description=description,
+                status=status,
+            )
+
     def get_all(self) -> List[Case]:
-        rows = self._conn.execute(
-            "SELECT id, title, description, status FROM cases"
-        ).fetchall()
+        with self._connection_factory() as conn:
+            rows = conn.execute(
+                "SELECT id, title, description, status FROM cases"
+            ).fetchall()
 
-        return [self._row_to_case(row) for row in rows]
-    
+            return [self._row_to_case(row) for row in rows]
+
     def get_by_id(self, case_id: int) -> Optional[Case]:
-        row = self._conn.execute(
-            "SELECT id, title, description, status FROM cases WHERE id = ?",
-            (case_id,),
-        ).fetchone()
+        with self._connection_factory() as conn:
+            row = conn.execute(
+                "SELECT id, title, description, status FROM cases WHERE id = ?",
+                (case_id,),
+            ).fetchone()
 
-        return self._row_to_case(row) if row else None
-    
+            return self._row_to_case(row) if row else None
+
     def update(
-            self,
-            case_id: int,
-            title: str,
-            description: str,
-            status: str,
+        self,
+        case_id: int,
+        title: str,
+        description: str,
+        status: str,
     ) -> Optional[Case]:
-        cursor = self._conn.execute(
-            """
-            UPDATE cases
-            SET title = ?, description = ?, status = ?
-            WHERE id = ?
-            """,
-            (title, description, status, case_id),
-        )
-        self._conn.commit()
+        with self._connection_factory() as conn:
+            cursor = conn.execute(
+                """
+                UPDATE cases
+                SET title = ?, description = ?, status = ?
+                WHERE id = ?
+                """,
+                (title, description, status, case_id),
+            )
+            conn.commit()
 
-        if cursor.rowcount == 0:
-            return None
-        
-        return self.get_by_id(case_id)
-    
+            if cursor.rowcount == 0:
+                return None
+
+            row = conn.execute(
+                "SELECT id, title, description, status FROM cases WHERE id = ?",
+                (case_id,),
+            ).fetchone()
+
+            return self._row_to_case(row) if row else None
+
     def delete(self, case_id: int) -> bool:
-        cursor = self._conn.execute(
-            "DELETE FROM cases WHERE id = ?",
-            (case_id,),
-        )
-        self._conn.commit()
-        return cursor.rowcount > 0
+        with self._connection_factory() as conn:
+            cursor = conn.execute(
+                "DELETE FROM cases WHERE id = ?",
+                (case_id,),
+            )
+            conn.commit()
+            return cursor.rowcount > 0
