@@ -71,7 +71,7 @@ The repository layer is defined as an abstract contract and has multiple impleme
     - Provides real persistence using SQLite
     - Uses in-memory SQLite databases during tests
 
-The active repository implementaion is selected using FastAPI dependency injection.
+The active repository implementation is selected using FastAPI dependency injection.
 
 ---
 
@@ -125,6 +125,7 @@ pytest
     - Full API requests via HTTP
     - Real SQLite database (in-memory)
     - Dependency overrides to ensure test validation
+    
 This approach ensures fast feedback while still validating real system behavior.
 
 ---
