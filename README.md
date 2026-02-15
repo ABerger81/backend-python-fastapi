@@ -1,6 +1,6 @@
 # Backend API - Case Management (FastAPI)
 
-A backend API built with **FastAPI** demonstrating clean architecture,
+A backend API built with **FastAPI** demonstrating clean architechture,
 dependency injection, and automated testing.
 
 This project is developed as part of my training in backend development,
@@ -11,20 +11,19 @@ with a focus on structure, testability, and maintainability.
 ## Project scope (current)
 
 - Backend-only application
+- Clear separation between API, service, and repository layers
 - Repository abstraction with multiple implementations
-- In-memory repository for unit tests
-- SQLite-backed repository for integration testing and development
-- Fully tested API endpoints
+- Automated unit and integration testing
+- SQLite-backed persistence for development and integration tests
 
 ---
 
 ## Functionality
-
 The API provides basic CRUD operations for managing cases:
 
 - Create case
 - Retreive all cases
-- Retrieve a specific case by ID
+- Retreive a specific case by ID
 - Update a case
 - Delete a case
 
@@ -36,33 +35,41 @@ Each case contains:
 
 ---
 
-## Architecture overview
-
+## Architechture overview
 The application follows a layered architechture:
 
-- **API layer**
-    FastAPI endpoints and request/response validation
+### API layer
+- FastAPI endpoints
+- Request and response validation
+- Translation of domain errors to HTTP responses
 
-- **Service layer**
-    Business logic and domain rules
+### Service layer
+- Business logic
+- Domain rules
+- Independent of HTTP and persistence concerns
 
-- **Repository layer**
-    Data access abstraction (currently in-memory storage)
+### Repository layer
+- Abstract repository contract
+- Concrete implementation for different storage mechanisms
 
-This separation allows the storage mechanism to be replaced (e.g. with a database)
-without changing the API or business logic.
+This separation allows the storage mechanism to be replaced
+without changing the API or business logic code.
 
-### Repository implementations
+---
 
+## Repository implementations
 The repository layer is defined as an abstract contract and has multiple implementations:
 
 - **InMemoryCaseRepository**
-    Used for unit tests and fast, isolated execution.
+    - Used for unit tests
+    - Fast, isolated and deterministic
 
-- ** SQLiteCaseRepository**
-    Used for integration tests and local development, providing real persistence.
+- **SQLiteCaseRepository**
+    - Used for integration tests and local development
+    - Provides real persistence using SQLite
+    - Uses in-memory SQLite databases during tests
 
-This allows switching storage mechanisms without modifying business logic or API code.
+The active repository implementaion is selected using FastAPI dependency injection.
 
 ---
 
@@ -100,41 +107,44 @@ The API will be available at:
 ---
 
 ## Testing
-Automated tests are written using pytest and FastAPI's 
+Automated tests are written using pytest and FastAPI's **TestClient** 
 
-API tests are written using `pytest` and FastAPI's `TestClient`.
-
-To run the test suite:
+To run the full test suite:
 
 ```bash
 pytest
 ```
-
-Tests include:
-- API integration tests
-- Repository unit tests
-- Service layer unit tests
+## Test Structure
+- **Unit tests**
+    - Service layer logic
+    - Repository implementation using in-memory storage
+    - No HTTP or database dependencies
+- **Integration tests**
+    - Full API requests via HTTP
+    - Real SQLite database (in-memory)
+    - Dependency overrides to ensure test validation
+This approach ensures fast feedback while still validating real system behavior.
 
 ---
 
 ## Error handling strategy
+- Business rule violations raise domain-level errors in the service layer
+- The API layer translates domain errors into appropriate HTTP responses
+- The persistence layer contains no HTTP or validation logic
 
-- Business rule violations raise domain errors in the service layer
-- API layer translates domain errors to HTTP responses
-- Persistence layer remains free of HTTP and validation logic
+---
 
 ## Future direction
 This project is intended to evolve into a fullstack application.
 Planned architectural improvements include:
-- Introducing a repository contract to support multiple storage implementations
-- Adding persistent storage (SQLite -> ORM later)
-- Strengthening integration tests with real infrastructure
-- Authentication and authorization
+- Stronger request validation and error contracts
+- Authenticaton and authorization
 - Frontend client
 - CI/CD pipeline
 
-## Development notes
+---
 
+## Development notes
 - Build artifacts and test caches are excluded from version control
-- Tests use dependency injection to swap repository implementations
-- SQLite is used for integration tests via in-memory databases
+- Dependency injection is used to swap repository implementations in tests
+- SQLite is used for integration testing via in-memory databases
