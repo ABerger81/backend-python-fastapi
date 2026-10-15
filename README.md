@@ -79,7 +79,7 @@ The active repository implementation is selected using FastAPI dependency inject
 
 1. Clone the repository
 ```bash
-git clone <repo-url>
+git clone https://github.com/ABerger81/backend-python-fastapi.git
 cd backend-python-fastapi
 ```
 
@@ -94,7 +94,7 @@ source .venv/bin/activate
 
 3. Install dependencies
 ```bash
-pip install -r requirements.txt
+pip install -e ".[dev]"
 ```
 
 4. Start the development server
