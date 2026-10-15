@@ -80,7 +80,7 @@ The active repository implementation is selected using FastAPI dependency inject
 1. Clone the repository
 ```bash
 git clone <repo-url>
-cd backend-api
+cd backend-python-fastapi
 ```
 
 2. Create and activate virtual environment
