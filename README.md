@@ -85,9 +85,13 @@ cd backend-python-fastapi
 
 2. Create and activate virtual environment
 ```bash
-python -m venv .venv
-# Windows
-.venv\Scripts\activate
+py -m venv .venv
+# Windows (PowerShell)
+.venv\Scripts\Activate.ps1
+# Windows (Command Prompt)
+.venv\Scripts\activate.bat
+# Git Bash on Windows
+source .venv/Scripts/activate
 # macOS / Linux
 source .venv/bin/activate
 ```
