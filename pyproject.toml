@@ -8,3 +8,5 @@ dependencies = [
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
+[project.optional-dependencies]
+dev = ["pytest", "httpx"]
